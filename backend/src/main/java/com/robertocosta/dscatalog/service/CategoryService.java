@@ -11,6 +11,8 @@ import com.robertocosta.dscatalog.entities.Category;
 import com.robertocosta.dscatalog.repositories.CategoryRepository;
 import com.robertocosta.dscatalog.service.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class CategoryService {
 
@@ -26,5 +28,25 @@ public class CategoryService {
 	public CategoryDTO findById(Long id){
 		Category result = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
 		return new CategoryDTO(result);
+	}
+	
+	@Transactional
+	public CategoryDTO insert(CategoryDTO dto) {
+		Category entity = new Category();
+		entity.setId(dto.getId());
+		entity.setName(dto.getName());
+		return new CategoryDTO(repository.save(entity));
+	}
+	
+	@Transactional
+	public CategoryDTO update(Long id, CategoryDTO dto) {
+		try {
+			Category entity = repository.getReferenceById(id);		
+			entity.setName(dto.getName());
+			entity = repository.save(entity);
+			return new CategoryDTO(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException("Recurso não encontrado");
+		}
 	}
 }
