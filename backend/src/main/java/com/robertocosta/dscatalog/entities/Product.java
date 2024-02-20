@@ -1,9 +1,11 @@
 package com.robertocosta.dscatalog.entities;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,9 +24,14 @@ public class Product {
 	private Long id;
 	
 	private String name;
+	
+	@Column(columnDefinition = "TEXT")
 	private String description;
 	private Double price;
 	private String imgUrl;
+	
+	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+	private Instant date;	
 	
 	@ManyToMany
 	@JoinTable(name = "tb_product_category",
@@ -35,12 +42,13 @@ public class Product {
 	public Product() {
 	}
 
-	public Product(Long id, String name, String description, Double price, String imgUrl) {
+	public Product(Long id, String name, Instant date, String description, Double price, String imgUrl) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.price = price;
 		this.imgUrl = imgUrl;
+		this.date = date;
 	}
 
 	public Long getId() {
@@ -82,10 +90,18 @@ public class Product {
 	public void setImgUrl(String imgUrl) {
 		this.imgUrl = imgUrl;
 	}
-
-//	public Set<Category> getCategories() {
-//		return categories;
-//	}
+	
+	public Instant getDate() {
+		return date;
+	}
+	
+	public void setDate(Instant date) {
+		this.date = date;
+	}
+	
+	public Set<Category> getCategories() {
+		return categories;
+	}
 
 	@Override
 	public int hashCode() {
@@ -103,6 +119,4 @@ public class Product {
 		Product other = (Product) obj;
 		return Objects.equals(id, other.id);
 	}
-
-
 }
