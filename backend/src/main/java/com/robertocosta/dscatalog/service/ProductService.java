@@ -81,13 +81,13 @@ public class ProductService {
 		entity.setImgUrl(dto.getImgUrl());
 		entity.setDate(Instant.now());
 		entity.getCategories().clear();
-//		for (CategoryDTO catDTO : dto.getCategories()) {
-//			Category cat = categoryRepository.getReferenceById(catDTO.getId());
-//			cat.setId(catDTO.getId());
-//			entity.getCategories().add(cat);
-//		}
+		for (CategoryDTO catDTO : dto.getCategories()) {
+			Category cat = categoryRepository.getReferenceById(catDTO.getId());
+			cat.setId(catDTO.getId());
+			entity.getCategories().add(cat);
+		}
 		
-		dto.getCategories().forEach(catDTO -> entity.getCategories().add(new Category(catDTO.getId(), catDTO.getName())));
+//		dto.getCategories().forEach(catDTO -> entity.getCategories().add(new Category(catDTO.getId(), catDTO.getName())));
 	}
 
 }
