@@ -24,7 +24,7 @@ public class ResourceExceptionHandler {
 	
 	@ExceptionHandler(DatabaseException.class)
 	public ResponseEntity<StandardError> dataBaseException(DatabaseException e, HttpServletRequest request){
-		HttpStatus status = HttpStatus.NOT_FOUND;
+		HttpStatus status = HttpStatus.FORBIDDEN;
 		StandardError err = new StandardError(Instant.now(),status.value(),e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
 	}
