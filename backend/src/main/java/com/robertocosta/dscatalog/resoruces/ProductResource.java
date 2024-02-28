@@ -32,6 +32,12 @@ public class ProductResource {
 		return ResponseEntity.ok().body(result);
 	}
 	
+//	@GetMapping
+//	public ResponseEntity<Page<ProductDTO>> findAll(Pageable pageable){
+//		Page<ProductDTO> result = service.findAll(pageable);
+//		return ResponseEntity.ok().body(result);
+//	}
+	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<ProductDTO> findId(@PathVariable Long id){
 		ProductDTO result = service.findById(id);
