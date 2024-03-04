@@ -18,7 +18,7 @@ public class ProductDTO {
 
 	private Long id;
 	
-	@Size(min = 5, max = 60, message = "Deve ter entre 5 e 6- caracteres")
+	@Size(min = 5, max = 60, message = "Deve ter entre 5 e 6 caracteres")
 	@NotBlank(message = "Campo requerido")
 	private String name;
 	
