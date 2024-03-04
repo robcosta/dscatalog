@@ -12,7 +12,7 @@ import com.robertocosta.dscatalog.entities.Product;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	@Query(value = "SELECT obj FROM Product obj "
-			+ "JOIN FETCH obj.categories "
-			, countQuery = "SELECT COUNT(obj) FROM Product obj JOIN obj.categories")
+			+ "JOIN FETCH obj.categories ")
+			//		, countQuery = "SELECT COUNT(obj) FROM Product obj JOIN obj.categories")
 	Page<Product> searchAll(Pageable pageable);
 }

@@ -51,6 +51,8 @@ public class CategoryService {
 			throw new ResourceNotFoundException("Recurso não encontrado");
 		}
 	}
+	
+	@Transactional
 	public void delete(Long id) {
 		if(!repository.existsById(id)) {
 			throw new ResourceNotFoundException("Recurso não encontrado");			

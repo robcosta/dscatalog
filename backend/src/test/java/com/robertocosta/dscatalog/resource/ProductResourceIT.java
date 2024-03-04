@@ -48,7 +48,7 @@ public class ProductResourceIT {
 	
 	@Test
 	public void searchAllShouldReturnSortedPageProductDTOWhenSortByName() throws Exception {
-		ResultActions result = mockMvc.perform(get("/products?page=0&size=12&sort=name,asc")
+		ResultActions result = mockMvc.perform(get("/products?sort=name,asc")
 				.accept(MediaType.APPLICATION_JSON));
 		
 		result.andExpect(status().isOk());
