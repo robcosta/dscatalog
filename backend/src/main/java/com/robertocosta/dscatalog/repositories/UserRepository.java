@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ "JOIN FETCH obj.roles ",
 			countQuery = "SELECT COUNT(obj) FROM User obj JOIN obj.roles")
 	Page<User> searchAll(Pageable pageable);
+	
+	User findByEmail(String email);
 }
