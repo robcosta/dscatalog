@@ -39,9 +39,10 @@ public class User {
 		
 	}
 
-	public User(Long id, String firstName, String lastName, String email, String password) {
+	public User(Long id, String firstname, String lastName, String email, String password) {
+		super();
 		this.id = id;
-		this.firstName = firstName;
+		this.firstName = firstname;
 		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
@@ -59,8 +60,8 @@ public class User {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setFirstName(String firstname) {
+		this.firstName = firstname;
 	}
 
 	public String getLastName() {
@@ -90,6 +91,10 @@ public class User {
 	public Set<Role> getRoles() {
 		return roles;
 	}
+
+	public void addRoles(Role role) {
+    	roles.add(role);
+    }
 
 	@Override
 	public int hashCode() {
