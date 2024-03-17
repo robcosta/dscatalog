@@ -17,4 +17,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Page<User> searchAll(Pageable pageable);
 	
 	User findByEmail(String email);
+	
+	@Query("SELECT obj "
+			+ "FROM User obj "
+			+ "JOIN FETCH obj.roles "
+			+ "WHERE obj.email = :email")
+		User searchUserAndRolesByEmail(String email);
 }

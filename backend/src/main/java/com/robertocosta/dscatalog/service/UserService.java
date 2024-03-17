@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +25,7 @@ import com.robertocosta.dscatalog.service.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class UserService {
+public class UserService  implements UserDetailsService {
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -89,5 +92,16 @@ public class UserService {
 			entity.getRoles().add(role);
 		}
 	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = repository.searchUserAndRolesByEmail(username);
+		if(user == null) {
+			throw new UsernameNotFoundException("User not found");
+		}
+		return user;		
+	}
+
+
 
 }
