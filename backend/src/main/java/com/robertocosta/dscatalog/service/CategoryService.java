@@ -5,6 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.robertocosta.dscatalog.dto.CategoryDTO;
@@ -34,6 +35,9 @@ public class CategoryService {
 	
 	@Transactional
 	public CategoryDTO insert(CategoryDTO dto) {
+		if(repository.findByName(dto.getName()) != null) {
+			throw new DatabaseException("Nome de categoria já existente");
+		}
 		Category entity = new Category();
 		entity.setId(dto.getId());
 		entity.setName(dto.getName());
@@ -43,16 +47,19 @@ public class CategoryService {
 	@Transactional
 	public CategoryDTO update(Long id, CategoryDTO dto) {
 		try {
-			Category entity = repository.getReferenceById(id);		
+			Category entity = repository.getReferenceById(id);
+			if(repository.findByName(dto.getName()) != null && entity.getId() != id) {
+				throw new DatabaseException("Nome de categoria já existente");
+			}
 			entity.setName(dto.getName());
 			entity = repository.save(entity);
 			return new CategoryDTO(entity);
-		} catch (EntityNotFoundException e) {
+		} catch (EntityNotFoundException e) {			
 			throw new ResourceNotFoundException("Recurso não encontrado");
 		}
 	}
 	
-	@Transactional
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public void delete(Long id) {
 		if(!repository.existsById(id)) {
 			throw new ResourceNotFoundException("Recurso não encontrado");			

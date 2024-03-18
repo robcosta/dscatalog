@@ -20,21 +20,21 @@ public class ResourceExceptionHandler {
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<StandardError> resourceNotFound(ResourceNotFoundException e, HttpServletRequest request){
 		HttpStatus status = HttpStatus.NOT_FOUND;
-		StandardError err = new StandardError(Instant.now(),status.value(),e.getMessage(), request.getRequestURI());
+		StandardError err = new StandardError(Instant.now(),status.value(),"Resource not found",e.getMessage(), request.getRequestURI());
 	    return ResponseEntity.status(status).body(err);
 	}
 	
 	@ExceptionHandler(DatabaseException.class)
 	public ResponseEntity<StandardError> dataBaseException(DatabaseException e, HttpServletRequest request){
 		HttpStatus status = HttpStatus.FORBIDDEN;
-		StandardError err = new StandardError(Instant.now(),status.value(),e.getMessage(), request.getRequestURI());
+		StandardError err = new StandardError(Instant.now(),status.value(),"Database Exception",e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ValidationError> validationException(MethodArgumentNotValidException e, HttpServletRequest request){
 		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-		ValidationError err = new ValidationError(Instant.now(),status.value(),e.getMessage(), request.getRequestURI());
+		ValidationError err = new ValidationError(Instant.now(),status.value(),"Validation exception",e.getMessage(), request.getRequestURI());
 		for(FieldError f : e.getBindingResult().getFieldErrors()) {
 			err.addError(f.getField(), f.getDefaultMessage());
 		}

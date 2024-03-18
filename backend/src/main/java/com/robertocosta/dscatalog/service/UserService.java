@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.robertocosta.dscatalog.dto.RoleDTO;
@@ -25,7 +26,7 @@ import com.robertocosta.dscatalog.service.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class UserService  implements UserDetailsService {
+public class UserService implements UserDetailsService {
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -69,6 +70,7 @@ public class UserService  implements UserDetailsService {
 		}
 	}
 
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public void delete(Long id) {
 		if (!repository.existsById(id)) {
 			throw new ResourceNotFoundException("Recurso não encontrado");
@@ -82,6 +84,7 @@ public class UserService  implements UserDetailsService {
 	
 	private void copyDtoToEntity(UserDTO dto, User entity) {
 		entity.setFirstName(dto.getFirstName());
+		entity.setLastName(dto.getLastName());
 		entity.setEmail(dto.getEmail().toLowerCase());
 //		entity.setPassword(dto.getPassword());
 		
