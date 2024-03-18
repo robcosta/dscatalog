@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.robertocosta.dscatalog.dto.ProductDTO;
-import com.robertocosta.dscatalog.resoruces.ProductResource;
 import com.robertocosta.dscatalog.tests.Factory;
+import com.robertocosta.dscatalog.tests.TokenUtil;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -31,11 +31,16 @@ public class ProductResourceIT {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
+	@Autowired
+	private TokenUtil tokenUtil;
+	
 	private Long existingId;
 	private Long nonExistingId;
 	private int countTotalProducts;
 	private ProductDTO productDTO;
 	private String jsonBody;
+	
+	private String username, password, bearerToken;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -44,6 +49,11 @@ public class ProductResourceIT {
 		countTotalProducts = 25;
 		productDTO = Factory.createProducDTO();
 		jsonBody = objectMapper.writeValueAsString(productDTO);
+		
+		username = "maria@gmail.com";
+		password = "123456";
+		
+		bearerToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
 	}
 	
 	@Test
@@ -52,7 +62,7 @@ public class ProductResourceIT {
 				.accept(MediaType.APPLICATION_JSON));
 		
 		result.andExpect(status().isOk());
-		//result.andExpect(jsonPath("$.totalElements").value(countTotalProducts));
+		result.andExpect(jsonPath("$.totalElements").value(countTotalProducts + 1));
 		result.andExpect(jsonPath("$.content").exists());
 		result.andExpect(jsonPath("$.content[0].name").value("Macbook Pro"));
 		result.andExpect(jsonPath("$.content[1].name").value("PC Gamer"));
@@ -66,6 +76,7 @@ public class ProductResourceIT {
 		String expectedDesciption = productDTO.getDescription();
 		
 		ResultActions result = mockMvc.perform(put("/products/{id}", existingId)
+				.header("Authorization", "Bearer " + bearerToken)
 				.content(jsonBody)
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON));
@@ -79,6 +90,7 @@ public class ProductResourceIT {
 	@Test
 	public void updatedShouldReturnNotFoundWhenIdDoesNotExisits() throws Exception {
 		ResultActions result = mockMvc.perform(put("/products/{id}", nonExistingId)
+				.header("Authorization", "Bearer " + bearerToken)
 				.content(jsonBody)
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON));
