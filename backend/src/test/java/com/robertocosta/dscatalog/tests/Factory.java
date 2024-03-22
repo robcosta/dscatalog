@@ -2,7 +2,6 @@ package com.robertocosta.dscatalog.tests;
 
 import java.time.Instant;
 
-import com.robertocosta.dscatalog.dto.CategoryDTO;
 import com.robertocosta.dscatalog.dto.ProductDTO;
 import com.robertocosta.dscatalog.entities.Category;
 import com.robertocosta.dscatalog.entities.Product;

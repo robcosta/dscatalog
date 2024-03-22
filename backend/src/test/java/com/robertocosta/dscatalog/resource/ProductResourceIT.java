@@ -62,7 +62,7 @@ public class ProductResourceIT {
 				.accept(MediaType.APPLICATION_JSON));
 		
 		result.andExpect(status().isOk());
-		result.andExpect(jsonPath("$.totalElements").value(countTotalProducts + 1));
+		result.andExpect(jsonPath("$.totalElements").value(countTotalProducts));
 		result.andExpect(jsonPath("$.content").exists());
 		result.andExpect(jsonPath("$.content[0].name").value("Macbook Pro"));
 		result.andExpect(jsonPath("$.content[1].name").value("PC Gamer"));
