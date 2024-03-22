@@ -1,6 +1,9 @@
 package com.robertocosta.dscatalog.service;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,7 +29,7 @@ public class ProductService {
 
 	@Autowired
 	private ProductRepository repository;
-	
+
 	@Autowired
 	private CategoryRepository categoryRepository;
 
@@ -35,7 +38,23 @@ public class ProductService {
 		Page<Product> result = repository.searchAll(pageable);
 		return result.map(x -> new ProductDTO(x, x.getCategories()));
 	}
-	
+
+	@Transactional(readOnly = true)
+	public Page<ProductDTO> searchAll(String categoryId, String name, Pageable pageable) {
+
+		List<Long> categoryIds = new ArrayList<>();
+		if (!"0".equals(categoryId)) {
+			categoryIds = Arrays.asList(categoryId.split(",")).stream().map(Long::parseLong).toList();
+		} else {
+			List<Category> category = categoryRepository.findAll();
+			for(int i=0; i<category.size(); i++) {
+				categoryIds.add(category.get(i).getId());
+			}
+		}
+		Page<Product> result = repository.searchProducts(categoryIds, name, pageable);
+		return result.map(x -> new ProductDTO(x, x.getCategories()));
+	}
+
 //	@Transactional(readOnly = true)
 //	public Page<ProductDTO> findAll(Pageable pageable) {
 //		Page<Product> result = repository.findAll(pageable);
@@ -79,7 +98,7 @@ public class ProductService {
 			throw new DatabaseException("Falha de integridade referencial");
 		}
 	}
-	
+
 	private void copyDtoToEntity(ProductDTO dto, Product entity) {
 		entity.setName(dto.getName());
 		entity.setDescription(dto.getDescription());
@@ -92,7 +111,7 @@ public class ProductService {
 			cat.setId(catDTO.getId());
 			entity.getCategories().add(cat);
 		}
-		
+
 //		dto.getCategories().forEach(catDTO -> entity.getCategories().add(new Category(catDTO.getId(), catDTO.getName())));
 	}
 
