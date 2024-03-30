@@ -30,19 +30,19 @@ public class ResourceServerConfig {
 	@Value("${cors.origins}")
 	private String corsOrigins;
 
-	@Bean
-	@Profile("test")
-	@Order(1)
-	public SecurityFilterChain h2SecurityFilterChain(HttpSecurity http) throws Exception {
+    @Bean
+    @Profile("test")
+    @Order(1)
+    SecurityFilterChain h2SecurityFilterChain(HttpSecurity http) throws Exception {
 
 		http.securityMatcher(PathRequest.toH2Console()).csrf(csrf -> csrf.disable())
 				.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
 		return http.build();
 	}
 
-	@Bean
-	@Order(3)
-	public SecurityFilterChain rsSecurityFilterChain(HttpSecurity http) throws Exception {
+    @Bean
+    @Order(3)
+    SecurityFilterChain rsSecurityFilterChain(HttpSecurity http) throws Exception {
 
 		http.csrf(csrf -> csrf.disable());
 		http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
@@ -51,8 +51,8 @@ public class ResourceServerConfig {
 		return http.build();
 	}
 
-	@Bean
-	public JwtAuthenticationConverter jwtAuthenticationConverter() {
+    @Bean
+    JwtAuthenticationConverter jwtAuthenticationConverter() {
 		JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 		grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
 		grantedAuthoritiesConverter.setAuthorityPrefix("");
